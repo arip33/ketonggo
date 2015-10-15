@@ -38,6 +38,23 @@ class Controller{
 		$this->FilterRequest();
 	}
 
+	protected function Plugin($plugin_arr=array()){
+
+		#date picker
+		$plugin['datepicker'] = '<script src="'.URL::Base().'assets/js/datepicker/js/bootstrap-datepicker.min.js"></script>';
+		$plugin['datepicker'] .= '<link href="'.URL::Base().'assets/js/datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet">';
+		$plugin['datepicker'] .= '<script>$(function(){$(".datepicker").datepicker({format: "yyyy-mm-dd"});});</script>';
+
+
+		#date picker
+		//$plugin['autocomplate'] = '<script src="'.URL::Base().'assets/js/typeahead.bundle.js"></script>';
+		$plugin['autocomplete'] = '<script src="'.URL::Base().'assets/js/bootstrap3-typeahead.min.js"></script>';
+
+		foreach($plugin_arr as $k=>$v){
+			$this->data['add_plugin'] .= $plugin[$v]."\n";
+		}
+	}
+
 	public static function &get_instance()
 	{
 		return self::$instance;
@@ -67,6 +84,14 @@ class Controller{
 
 	public function XSS($val) 
 	{
+		if(is_array($val)){
+			$valarr = array();
+			foreach ($val as $key => $value) {
+				# code...
+				$valarr[$key] = $this->XSS($value);
+			}
+			return $valarr;
+		}
 		//axe all non printables
 		$val = preg_replace('/([\x00-\x08,\x0b-\x0c,\x0e-\x19])/', '', $val);
 		
@@ -272,5 +297,27 @@ class Controller{
 	
 	protected function SetFlash($key, $msg){
 		$this->session->Set($this->ctrl.$key, $msg);
+	}
+	
+
+	function GenerateTree($row, $colparent, $colid, $collabel, $valparent=null, &$return=array(), &$i=0, $level=0){
+		$level++;
+		foreach ($row as $key => $value) {
+			# code...
+			if($value[$colparent]==$valparent){
+				unset($row[$key]);
+
+				$space = '';
+				for($k=1; $k<$level; $k++){
+					$space .='---';
+				}
+
+				$value[$collabel] = $space.$value[$collabel];
+				$return[$i]=$value;
+
+				$i++;
+				$this->GenerateTree($row, $colparent, $colid, $collabel, $value[$colid], $return, $i, $level);
+			}
+		}
 	}
 }
