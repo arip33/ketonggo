@@ -4,6 +4,7 @@ class Model{
 	public $table;
 	protected $pk;
 	protected $arr_no_quote=array();
+	public $arrNoquote=array();
 	function __construct(){
         if(!class_exists('ADONewConnection')){
            	require_once(ketonggo.'library/adodb5/adodb.inc.php');
@@ -190,5 +191,27 @@ class Model{
 		");
 		
 		return $arr_return;
+	}
+	
+
+	function GenerateTree($row, $colparent, $colid, $collabel, $valparent=null, &$return=array(), &$i=0, $level=0){
+		$level++;
+		foreach ($row as $key => $value) {
+			# code...
+			if($value[$colparent]==$valparent){
+				unset($row[$key]);
+
+				$space = '';
+				for($k=1; $k<$level; $k++){
+					$space .='---';
+				}
+
+				$value[$collabel] = $space.$value[$collabel];
+				$return[$i]=$value;
+
+				$i++;
+				$this->GenerateTree($row, $colparent, $colid, $collabel, $value[$colid], $return, $i, $level);
+			}
+		}
 	}
 }

@@ -384,8 +384,11 @@ class UI {
 	        			break;
 	        		
 	        		case 'date':
-	        			$kg->plugin[]='datepicker';
-	            		echo "<td>".UI::createTextBox("list_search[".$rows['name']."]",$filter_arr[$rows['name']],'','',true,'form-control datepicker','placeholder="Search '.$rows['label'].'..."')."</td>";
+	            		echo "<td style='position:relative'>".UI::createTextBox("list_search[".$rows['name']."]",$filter_arr[$rows['name']],'','',true,'form-control datepicker','placeholder="Search '.$rows['label'].'..."')."</td>";
+	        			break;
+
+	        		case 'datetime':
+	            		echo "<td style='position:relative'>".UI::createTextBox("list_search[".$rows['name']."]",$filter_arr[$rows['name']],'','',true,'form-control datetimepicker','placeholder="Search '.$rows['label'].'..."')."</td>";
 	        			break;
 	        		
 	        		default:

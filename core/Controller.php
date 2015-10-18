@@ -38,18 +38,24 @@ class Controller{
 		$this->FilterRequest();
 	}
 
-	protected function Plugin($plugin_arr=array()){
-
+	protected function Plugin(){
+		if(!count($this->plugin_arr))
+			return;
+		
 		#date picker
-		$plugin['datepicker'] = '<script src="'.URL::Base().'assets/js/datepicker/js/bootstrap-datepicker.min.js"></script>';
-		$plugin['datepicker'] .= '<link href="'.URL::Base().'assets/js/datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet">';
-		$plugin['datepicker'] .= '<script>$(function(){$(".datepicker").datepicker({format: "yyyy-mm-dd"});});</script>';
+		$plugin['datepicker'] .= '<script src="'.URL::Base().'assets/js/datepicker/js/moment.min.js"></script>';
+		$plugin['datepicker'] .= '<script src="'.URL::Base().'assets/js/datepicker/js/bootstrap-datetimepicker.js"></script>';
+		$plugin['datepicker'] .= '<script>$(function(){$(".datepicker").datetimepicker({format: "YYYY-MM-DD"});});</script>';
+		$plugin['datepicker'] .= '<script>$(function(){$(".datetimepicker").datetimepicker({format: "YYYY-MM-DD hh:mm:ss"});});</script>';
+		$plugin['datepicker'] .= '<link rel="stylesheet" href="'.URL::Base().'assets/js/datepicker/css/bootstrap-datetimepicker.min.css" />';
 
 
 		#date picker
 		//$plugin['autocomplate'] = '<script src="'.URL::Base().'assets/js/typeahead.bundle.js"></script>';
 		$plugin['autocomplete'] = '<script src="'.URL::Base().'assets/js/bootstrap3-typeahead.min.js"></script>';
 
+
+		$plugin_arr=array_unique($this->plugin_arr);
 		foreach($plugin_arr as $k=>$v){
 			$this->data['add_plugin'] .= $plugin[$v]."\n";
 		}
@@ -206,6 +212,9 @@ class Controller{
 	//load view with template
 	protected function View($view='')
 	{
+
+		$this->Plugin();
+
 		if(is_array($this->data))
 		{
 			foreach($this->data as $key=>$value)
@@ -235,6 +244,9 @@ class Controller{
 	}
 	//load view without template
 	protected function PartialView($view='',$string=false){
+
+		$this->Plugin();
+
 		if(is_array($this->data))
 		{
 			foreach($this->data as $key=>$value)
