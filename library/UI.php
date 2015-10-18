@@ -103,7 +103,7 @@ class UI {
 	}
 	
 	// membuat textbox 'file',$row['nama_file'], URL::Base("panelbackend/preview_file/$row[id_buku]"), URL::Base("panelbackend/delete_file/$row[id_buku]"), $edited, false, 'form-control'
-	public static function createInputFile($nameid, $nama_file, $url_preview, $url_delete, $edit=true, $ispreview=false, $class='form-control', $add='style="width:auto"') {
+	public static function createInputFile($nameid, $nama_file='', $url_preview='', $url_delete='', $edit=true, $ispreview=false, $class='form-control', $add='style="width:auto"') {
         //if (empty($class))
         //    $class = 'control_style';
 
@@ -121,14 +121,14 @@ class UI {
 		if($ispreview && $nama_file){
 			$tb .= "<img src='$url_preview' width='100px'/>";
 		}
-		
+		if($nama_file){
 		$tb .= "<div style='clear:both'></div>";
 		$tb .= " <a href='$url_preview' target='_BLANK' style='float:left'>$nama_file</a> &nbsp; ";
 		if(!empty($edit) && $nama_file) {
 			$tb .= " <a href='$url_delete' style='float:left'>hapus</a> ";
 		}
 		$tb .= "<div style='clear:both'></div>";
-		
+		}
 		return $tb;
 	}
 	
@@ -503,7 +503,22 @@ class UI {
 	}
 
 	public static function showButtonMode($mode, $key=null, $edited=false) {
+		$kg = get_instance();
+
 		$str = '';
+		if(count($kg->addbuttons)){
+			foreach ($kg->addbuttons as $key => $value) {
+				$str .= UI::getButton($value);
+			}
+		}
+
+		if(count($kg->buttons)){
+			foreach ($kg->buttons as $key => $value) {
+				$str .= UI::getButton($value);
+			}
+			return $str;
+		}
+
 		if ($mode === 'lst' || $mode === 'index' || $mode === 'daftar') {
 			$str .= UI::getButton('add');
 			$str .= UI::getButton('reset');
@@ -563,6 +578,15 @@ class UI {
 			<script>
 		    function goAdd(){
 		        window.location = "'.URL::Base($kg->page_ctrl."/add".$add_param).'";
+		    }
+		    </script>';
+		}
+
+		if ($id === 'import') {
+			return '<input type="button" '.$add.' class="btn btn-sm btn-primary" value="Import" onclick="return goImport()" /> 
+			<script>
+		    function goImport(){
+		        window.location = "'.URL::Base($kg->page_ctrl."/import".$add_param).'";
 		    }
 		    </script>';
 		}

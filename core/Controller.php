@@ -12,6 +12,7 @@ class Controller{
 	public $mode;
 	public $session;
 	public $get=array();
+	public $addbuttons = array();
 	protected $xss_clean = false;
 	public function __construct()
 	{
@@ -184,11 +185,29 @@ class Controller{
 		}
 		else
 		{
-			$filename=ucwords(strtolower($filename));
 			if(is_file(base_dir.'helper/'.$filename.'.php')){
 				require_once(base_dir.'helper/'.$filename.'.php');
 			}elseif(is_file(ketonggo.'helper/'.$filename.'.php')){
 				require_once(ketonggo.'helper/'.$filename.'.php');
+			}
+		}
+		unset($filename);
+	}
+	
+	protected function Library($filename)
+	{
+		if(is_array($filename))
+		{
+			foreach($filename as $k=>$v){
+				$this->Library($v);
+			}
+		}
+		else
+		{
+			if(is_file(base_dir.'library/'.$filename.'.php')){
+				require_once(base_dir.'library/'.$filename.'.php');
+			}elseif(is_file(ketonggo.'library/'.$filename.'.php')){
+				require_once(ketonggo.'library/'.$filename.'.php');
 			}
 		}
 		unset($filename);
