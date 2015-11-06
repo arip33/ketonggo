@@ -29,6 +29,18 @@ function ReadMore($text='',$urlreadmore='#',$readmore=true){
 	return $str;
 }
 
+function DifTime($time1, $time2){
+	$time1 = strtotime($time1);
+	$time2 = strtotime($time2);
+	$time3 = $time1-$time2;
+	$jam = floor($time3/3600);
+	$time3 = $time3%3600;
+	$menit = floor($time3/60);
+	$time3 = $time3%60;
+	$detik = $time3;
+	return $jam.' jam, '. $menit.' menit, '. $detik.' detik';
+}
+
 
 
 function ReadMorePlain($text='',$count_word=10){

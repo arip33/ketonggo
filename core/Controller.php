@@ -14,6 +14,23 @@ class Controller{
 	public $get=array();
 	public $addbuttons = array();
 	protected $xss_clean = false;
+	public $url = "";
+	public $urlaccess = "";
+	public $viewpath = "";
+	public $auth;
+	public $private = true;
+	static $referer = false;
+	public $pk;
+	public $limit = 5;
+	public $limit_arr = array('5','10','15');
+	public $arrNoquote = array();
+	protected $layout = "";
+	protected $viewdetail = "";
+	protected $viewlist = "";
+	protected $filter = " 1=1 ";
+	public $access_mode = array();
+	public $page_escape = array();
+	public $is_super_admin = false;
 	public function __construct()
 	{
 		self::$instance =& $this;
@@ -42,12 +59,20 @@ class Controller{
 	protected function Plugin(){
 		if(!count($this->plugin_arr))
 			return;
-		
+				
+		#chosen
+		$plugin['chosen'] .= '<script src="'.URL::Base().'assets/js/chosen.jquery.js"></script>';
+		$plugin['chosen'] .= "<script>$(function() {
+        \$('.chosen-select').chosen({width:'100%'});
+        \$('.chosen-select-deselect').chosen({ allow_single_deselect: true });
+      });</script>";
+		$plugin['chosen'] .= '<link rel="stylesheet" href="'.URL::Base().'assets/css/bootstrap-chosen.css" />';
+
 		#date picker
 		$plugin['datepicker'] .= '<script src="'.URL::Base().'assets/js/datepicker/js/moment.min.js"></script>';
 		$plugin['datepicker'] .= '<script src="'.URL::Base().'assets/js/datepicker/js/bootstrap-datetimepicker.js"></script>';
-		$plugin['datepicker'] .= '<script>$(function(){$(".datepicker").datetimepicker({format: "YYYY-MM-DD"});});</script>';
-		$plugin['datepicker'] .= '<script>$(function(){$(".datetimepicker").datetimepicker({format: "YYYY-MM-DD hh:mm:ss"});});</script>';
+		$plugin['datepicker'] .= '<script>$(function(){$(".datepicker").datetimepicker({format: "YYYY-MM-DD",useCurrent:false});});</script>';
+		$plugin['datepicker'] .= '<script>$(function(){$(".datetimepicker").datetimepicker({format: "YYYY-MM-DD HH:mm:ss",useCurrent:false});});</script>';
 		$plugin['datepicker'] .= '<link rel="stylesheet" href="'.URL::Base().'assets/js/datepicker/css/bootstrap-datetimepicker.min.css" />';
 
 
@@ -56,7 +81,7 @@ class Controller{
 		$plugin['autocomplete'] = '<script src="'.URL::Base().'assets/js/bootstrap3-typeahead.min.js"></script>';
 
 
-		$plugin_arr=array_unique($this->plugin_arr);
+		$plugin_arr=array_unique(array_values($this->plugin_arr));
 		foreach($plugin_arr as $k=>$v){
 			$this->data['add_plugin'] .= $plugin[$v]."\n";
 		}

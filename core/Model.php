@@ -37,8 +37,8 @@ class Model{
 	    return $conn;
     }
 
-    public static function Execute(){
-    	return $this->conn->Execute();
+    public function Execute($sql){
+    	return $this->conn->Execute($sql);
     }
 
 	public function GetOne($sql){

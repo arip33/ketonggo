@@ -9,8 +9,14 @@ class FormValidation {
 		$this->rules = $rules;
 	}
 
-	function Run(){
-		$param = $this->param;
+	function Run($param_arr=array()){
+		if(!is_array($this->param))
+			$this->param = array();
+		
+		if(!is_array($param_arr))
+			$param_arr = array();
+
+		$param = array_merge($this->param, $param_arr);
 		foreach($this->rules as $row){
 			switch (strtolower($row['rules'])){
 				case 'required':
